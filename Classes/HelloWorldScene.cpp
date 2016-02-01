@@ -1,15 +1,14 @@
-#include "MainScene.h"
-#include "GameScene.h"
-#include "Definitions.h"
+#include "HelloWorldScene.h"
+
 USING_NS_CC;
 
-Scene* MainScene::createScene()
+Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = MainScene::create();
+    auto layer = HelloWorld::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -19,7 +18,7 @@ Scene* MainScene::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool MainScene::init()
+bool HelloWorld::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -36,10 +35,19 @@ bool MainScene::init()
     //    you may modify it.
 
     // add a "close" icon to exit the progress. it's an autorelease object
-  
-  
-    // create menu, it's an autorelease object
+    auto closeItem = MenuItemImage::create(
+                                           "CloseNormal.png",
+                                           "CloseSelected.png",
+                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
+                                origin.y + closeItem->getContentSize().height/2));
+
+    // create menu, it's an autorelease object
+    auto menu = Menu::create(closeItem, NULL);
+    menu->setPosition(Vec2::ZERO);
+    this->addChild(menu, 1);
+
     /////////////////////////////
     // 3. add your codes below...
 
@@ -68,9 +76,11 @@ bool MainScene::init()
 }
 
 
-void MainScene::GoToGameScene(<#cocos2d::Ref *sender#> )
+void HelloWorld::menuCloseCallback(Ref* pSender)
 {
-    auto Scene = GameScene::createScene();
-    Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
+    Director::getInstance()->end();
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    exit(0);
+#endif
 }
